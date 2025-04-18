@@ -1,6 +1,6 @@
 export function styleButton(backgroundColor : string, shape: string, primary: boolean, size: string, disabled: boolean) {
-  const color = primary ? 'white': '#333';
-  let backgroundColorStyle = primary ? '#1ea7fd' : 'transparent';
+  const color = primary ? 'white': 'white';
+  let backgroundColorStyle ='#1ea7fd';
   let fontSize = '14px';
   let padding = '11px 20px';
 
@@ -61,7 +61,7 @@ export function styleButton(backgroundColor : string, shape: string, primary: bo
       opacity: 1,
       transition: '0s',
     },
-    '.kariuButton:active:after': {
+    '.karedButton:active:after': {
       transform: 'scale(0,0)',
       opacity: '0.2',
       transition: '0s'
@@ -78,12 +78,12 @@ export function styleButton(backgroundColor : string, shape: string, primary: bo
         opacity: 0
       }
     },
-    '.kariuButton--primary': {
+    '.karedButton--primary': {
       color: disabled ? 'red' : 'white',
       backgroundColor: '#1ea7fd'
     },
-    '.kariuButton--secondary': {
-      color:  disabled ? 'blue' : '#333',
+    '.karedButton--secondary': {
+      color:  disabled ? 'blue' : 'white',
       backgroundColor: 'transparent',
       boxShadow: 'rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset',
     }

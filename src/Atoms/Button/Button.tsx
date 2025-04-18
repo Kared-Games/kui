@@ -82,7 +82,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   ...buttonProps
 }) => {
-  const mode = primary ? 'kariuButton--primary' : 'kariuButton--secondary';
+  const mode = primary ? 'karedButton--primary' : 'karedButton--secondary';
   const buttonCustom = styleButton(backgroundColor || '', shape, primary, size, disabled) as unknown as React.CSSProperties;
   const completeStyle: React.CSSProperties = { ...buttonCustom, ...sx };
   
@@ -92,7 +92,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       type={type}
-      className={['kariuButton', `kariuButton--${size}`, shape, mode, className, `${disabled ? 'disabled' : ''}`].join(' ')}
+      className={['karedButton', `karedButton--${size}`, shape, mode, className, `${disabled ? 'disabled' : ''}`].join(' ')}
       style={completeStyle}
       onClick={(event) => {
         if (buttonProps.onClick) {
@@ -102,7 +102,7 @@ const Button: React.FC<ButtonProps> = ({
       {...buttonProps}
       disabled={disabled}
     >
-      {label && <span className='kariuButton--label'>{label}</span>}
+      {label && <span className='karedButton--label'>{label}</span>}
       {ripple && <Ripple duration={rippleDuration} color={color} />}
       {children}
     </button>
