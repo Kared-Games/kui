@@ -2,7 +2,7 @@
   "name": "kared-ui",
   "version": "1.0.0",
   "description": "Design system",
-  "main": "index.js",
+  "main": "index.tsx",
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",
     "@storybook/addon-essentials": "^8.6.12",
