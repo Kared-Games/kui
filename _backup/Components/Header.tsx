@@ -1,11 +1,28 @@
-import React from "react";
-
-import PropTypes from "prop-types";
-
 import { Button } from "../Atoms/Button";
 import "./header.css";
 
-export const Header = ({ user = null, onLogin, onLogout, onCreateAccount }) => (
+type HeaderProps = {
+  user: {
+    name: string;
+  } | null;
+  onLogin: () => void;
+  onLogout: () => void;
+  onCreateAccount: () => void;
+};
+
+/**
+ * Header component
+ * @param user - User object containing user information
+ * @param onLogin - Function to handle login
+ * @param onLogout - Function to handle logout
+ * @param onCreateAccount - Function to handle account creation
+ */
+export const Header = ({
+  user = null,
+  onLogin,
+  onLogout,
+  onCreateAccount,
+}: HeaderProps) => (
   <header>
     <div className="storybook-header">
       <div>
@@ -55,12 +72,3 @@ export const Header = ({ user = null, onLogin, onLogout, onCreateAccount }) => (
     </div>
   </header>
 );
-
-Header.propTypes = {
-  user: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-  }),
-  onLogin: PropTypes.func.isRequired,
-  onLogout: PropTypes.func.isRequired,
-  onCreateAccount: PropTypes.func.isRequired,
-};

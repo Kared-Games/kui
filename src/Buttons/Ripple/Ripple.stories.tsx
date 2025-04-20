@@ -1,27 +1,27 @@
-import React from 'react';
-import { Meta, StoryObj } from '@storybook/react';
-import { Ripple } from '../src/Atoms';
+import React from "react";
+import { Meta, StoryObj } from "@storybook/react";
+import Ripple from "./Ripple";
 
 const meta: Meta<typeof Ripple> = {
-  title: 'Atoms/Ripple',
+  title: "Atoms/Ripple",
   component: Ripple,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     duration: {
-      control: { type: 'number' },
-      description: 'Duration of the animation in milliseconds',
+      control: { type: "number" },
+      description: "Duration of the animation in milliseconds",
     },
     color: {
-      control: { type: 'color' },
-      description: 'Color of the ripple effect',
+      control: { type: "color" },
+      description: "Color of the ripple effect",
     },
     animationType: {
-      control: { type: 'select' },
-      description: 'Type of animation',
-      options: ['circle', 'square', 'fade', 'expand'],
+      control: { type: "select" },
+      description: "Type of animation",
+      options: ["circle", "square", "fade", "expand"],
     },
   },
 };
@@ -31,19 +31,28 @@ type Story = StoryObj<typeof Ripple>;
 
 // Conteneur pour montrer l'effet de façon plus visible
 const RippleContainer: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <div className='ripple-container' 
-  style={{ width: '100%', height: '100%', backgroundColor: '#f0f0f0', 
-  display: 'flex', justifyContent: 'center', 
-  alignItems: 'center', borderRadius: '4px', cursor: 'pointer' }}>
+  <div
+    className="ripple-container"
+    style={{
+      width: "100%",
+      height: "100%",
+      backgroundColor: "#f0f0f0",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: "4px",
+      cursor: "pointer",
+    }}
+  >
     <span>Click me! the ripple is here</span>
-   {children}
+    {children}
   </div>
 );
 
 export const Default: Story = {
   args: {
     duration: 800,
-    color: 'rgba(0, 0, 0, 0.1)',
+    color: "rgba(0, 0, 0, 0.1)",
   },
   render: (args) => (
     <RippleContainer>
@@ -55,7 +64,7 @@ export const Default: Story = {
 export const Fast: Story = {
   args: {
     duration: 100,
-    color: 'rgba(0, 0, 0, 0.2)',
+    color: "rgba(0, 0, 0, 0.2)",
   },
   render: (args) => (
     <RippleContainer>
@@ -67,7 +76,7 @@ export const Fast: Story = {
 export const Slow: Story = {
   args: {
     duration: 1500,
-    color: 'rgba(0, 0, 0, 0.1)',
+    color: "rgba(0, 0, 0, 0.1)",
   },
   render: (args) => (
     <RippleContainer>
@@ -79,7 +88,7 @@ export const Slow: Story = {
 export const Colored: Story = {
   args: {
     duration: 800,
-    color: 'rgba(238, 125, 19, 0.3)',
+    color: "rgba(238, 125, 19, 0.3)",
   },
   render: (args) => (
     <RippleContainer>
@@ -91,8 +100,8 @@ export const Colored: Story = {
 export const SquareAnimation: Story = {
   args: {
     duration: 800,
-    color: 'rgba(63, 81, 181, 0.3)',
-    animationType: 'square',
+    color: "rgba(63, 81, 181, 0.3)",
+    animationType: "square",
   },
   render: (args) => (
     <RippleContainer>
@@ -104,8 +113,8 @@ export const SquareAnimation: Story = {
 export const FadeAnimation: Story = {
   args: {
     duration: 800,
-    color: 'rgba(76, 175, 80, 0.3)',
-    animationType: 'fade',
+    color: "rgba(76, 175, 80, 0.3)",
+    animationType: "fade",
   },
   render: (args) => (
     <RippleContainer>
@@ -117,12 +126,12 @@ export const FadeAnimation: Story = {
 export const ExpandAnimation: Story = {
   args: {
     duration: 800,
-    color: 'rgba(233, 30, 99, 0.3)',
-    animationType: 'expand',
+    color: "rgba(233, 30, 99, 0.3)",
+    animationType: "expand",
   },
   render: (args) => (
     <RippleContainer>
       <Ripple {...args} />
     </RippleContainer>
   ),
-}; 
+};

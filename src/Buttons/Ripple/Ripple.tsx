@@ -1,16 +1,32 @@
-import React, { useState, MouseEvent, useEffect } from 'react';
-import './ripple.css';
+import React, { useState, MouseEvent, useEffect } from "react";
+import "./ripple.css";
 
 interface RippleProps {
   duration: number;
   color: string;
-  animationType?: 'circle' | 'square' | 'fade' | 'expand' | 'wave';
+  animationType?: "circle" | "square" | "fade" | "expand" | "wave";
   className?: string;
   sx?: React.CSSProperties;
 }
 
-const Ripple: React.FC<RippleProps> = ({ duration, color, animationType = 'circle', className, sx }) => {
-  const [rippleArray, setRippleArray] = useState<Array<{ top: number; left: number; size: number }>>([]);
+/**
+ * Ripple effect component
+ * @param {number} duration - Duration of the ripple effect in milliseconds
+ * @param {string} color - Color of the ripple effect
+ * @param {string} animationType - Type of animation (circle, square, fade, expand, wave)
+ * @param {string} className - Additional class name for styling
+ * @param {React.CSSProperties} sx - Additional styles for the ripple container
+ */
+export default function Ripple({
+  duration,
+  color,
+  animationType = "circle",
+  className,
+  sx,
+}: RippleProps) {
+  const [rippleArray, setRippleArray] = useState<
+    Array<{ top: number; left: number; size: number }>
+  >([]);
 
   useEffect(() => {
     if (rippleArray.length > 0) {
@@ -23,7 +39,10 @@ const Ripple: React.FC<RippleProps> = ({ duration, color, animationType = 'circl
 
   const addRipple = (event: MouseEvent<HTMLDivElement>) => {
     const rippleContainer = event.currentTarget.getBoundingClientRect();
-    const size = rippleContainer.width > rippleContainer.height ? rippleContainer.width : rippleContainer.height;
+    const size =
+      rippleContainer.width > rippleContainer.height
+        ? rippleContainer.width
+        : rippleContainer.height;
     const x = event.clientX - rippleContainer.left - size / 2;
     const y = event.clientY - rippleContainer.top - size / 2;
     const newRipple = {
@@ -46,13 +65,13 @@ const Ripple: React.FC<RippleProps> = ({ duration, color, animationType = 'circl
             height: ripple.size,
             backgroundColor: color,
             animationDuration: `${duration}ms`,
-            zIndex: 9999
+            zIndex: 9999,
           }}
-          className={`ripple ripple-${animationType}${className ? ` ${className}` : ''}`}
+          className={`ripple ripple-${animationType}${
+            className ? ` ${className}` : ""
+          }`}
         />
       ))}
     </div>
   );
-};
-
-export { Ripple };
+}
