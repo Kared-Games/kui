@@ -75,7 +75,12 @@ function AvatarMenu({
   return (
     <Box id={id} {...props} sx={{ flexGrow: 0, ...sx }}>
       <Tooltip title={title}>
-        <IconButton id="avatar-menu" onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+        <IconButton
+          id="avatar-menu"
+          data-testid="btn-avatar-menu"
+          onClick={handleOpenUserMenu}
+          sx={{ p: 0 }}
+        >
           <Avatar alt={title} src={imageUrl} />
         </IconButton>
       </Tooltip>

@@ -81,6 +81,7 @@ function Header({
   return (
     <ResponsiveAppBar
       id="navbar"
+      data-testid="navbar"
       position="sticky"
       sx={{ top: 0, paddingTop: "env(safe-area-inset-top)" }}
     >
@@ -97,6 +98,7 @@ function Header({
             {(showHomeButton || (!showMenuButton && !showBackButton)) && (
               <IconButton
                 id="btn-appbar-home"
+                data-testid="btn-appbar-home"
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -113,6 +115,8 @@ function Header({
             {showMenuButton && (
               <>
                 <IconButton
+                  id="btn-appbar-menu"
+                  data-testid="btn-appbar-menu"
                   size="large"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
@@ -148,6 +152,7 @@ function Header({
           {showBackButton && (
             <IconButton
               id="btn-appbar-back"
+              data-testid="btn-appbar-back"
               size="large"
               aria-controls="menu-appbar"
               sx={{ p: 1, opacity: 0.5 }}
