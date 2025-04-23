@@ -14,7 +14,7 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIos";
 import AvatarMenu from "@/Avatars/AvatarMenu";
-import { HeaderProps, NavOption } from "./Header.d";
+import type { HeaderProps, NavOption } from "./Header.types";
 
 /**
  * Header component

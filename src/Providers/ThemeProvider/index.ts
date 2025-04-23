@@ -1,3 +1,3 @@
 export { default } from "./ThemeProvider";
-export * from "./ThemeProvider";
-export type * from "./ThemeProvider.d.ts";
+export type { ThemeProviderProps } from "./ThemeProvider.types";
+export { useTheme } from "./useTheme";

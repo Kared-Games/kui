@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { ThemeOptions } from "@mui/material/styles";
+import type { ReactNode } from "react";
+import type { ThemeOptions } from "@mui/material/styles";
 
 /**
  * Props for the ThemeProvider component

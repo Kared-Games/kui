@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
-import { SxProps, Theme } from "@mui/material";
-import { BoxProps } from "@mui/material/Box";
+import type { ReactNode } from "react";
+import type { SxProps, Theme } from "@mui/material";
+import type { BoxProps } from "@mui/material/Box";
 
 /**
  * Avatar menu option

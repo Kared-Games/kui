@@ -1,3 +1,5 @@
+import { Theme } from "@mui/material/styles";
+
 /**
  * Theme mode
  */
@@ -11,6 +13,10 @@ export interface ThemeContextType {
    * Current theme mode
    */
   mode: ThemeMode;
+  /**
+   * Current theme
+   */
+  theme: Theme;
   /**
    * Toggle theme mode
    */

@@ -8,7 +8,10 @@ const dirname =
     ? __dirname
     : path.dirname(fileURLToPath(import.meta.url));
 
-// More info at: https://storybook.js.org/docs/writing-tests/test-addon
+/**
+ * Vitest configuration
+ * @see https://storybook.js.org/docs/writing-tests/test-addon
+ */
 export default defineConfig({
   resolve: {
     alias: {

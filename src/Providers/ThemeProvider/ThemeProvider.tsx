@@ -2,12 +2,12 @@ import { useCallback, useReducer, useMemo } from "react";
 import { ThemeProvider as ThemeMui, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import deepmerge from "@mui/utils/deepmerge";
-import defaultConfig from "./config";
+import defaultConfig from "./config/theme";
 import paletteDark from "./config/palette.dark";
 import paletteLight from "./config/palette.light";
 import { ThemeContext, themeReducer, initialState } from "./ThemeContext";
-import { ThemeMode } from "./ThemeContext.d";
-import { ThemeProviderProps } from "./ThemeProvider.d";
+import type { ThemeMode } from "./ThemeContext.types";
+import type { ThemeProviderProps } from "./ThemeProvider.types";
 
 /**
  * Theme context provider
@@ -22,7 +22,7 @@ import { ThemeProviderProps } from "./ThemeProvider.d";
  * </ThemeProvider>
  * ```
  */
-export function ThemeProvider({
+function ThemeProvider({
   children,
   mode = initialState.mode,
   themeOptions = {},
@@ -45,28 +45,34 @@ export function ThemeProvider({
 
   // ----------------------------------------------------------------------
 
-  const value = useMemo(
-    () => ({
-      mode: state.mode,
-      toggleTheme,
-      setMode,
-    }),
-    [state.mode, toggleTheme, setMode]
-  );
-
   const theme = useMemo(() => {
     const themeMode = state.mode;
+
+    const defaultPalette = themeMode === "dark" ? paletteDark : paletteLight;
+    const palette = themeOptions.palette
+      ? themeOptions.palette
+      : defaultPalette;
 
     return createTheme({
       ...defaultConfig,
       ...themeOptions,
-      palette: themeMode === "dark" ? paletteDark : paletteLight,
+      palette,
       components: deepmerge(
         defaultConfig.components || {},
         themeOptions.components || {}
       ),
     });
   }, [state.mode, themeOptions]);
+
+  const value = useMemo(
+    () => ({
+      mode: state.mode,
+      theme,
+      toggleTheme,
+      setMode,
+    }),
+    [state.mode, theme, toggleTheme, setMode]
+  );
 
   // ----------------------------------------------------------------------
 

@@ -1,3 +1,2 @@
 export { default } from "./AvatarMenu";
-export * from "./AvatarMenu";
-export type * from "./AvatarMenu.d.ts";
+export type { AvatarMenuProps, AvatarMenuOption } from "./AvatarMenu.types";

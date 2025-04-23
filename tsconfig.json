@@ -7,7 +7,6 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -22,7 +21,6 @@
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
     "noUncheckedIndexedAccess": true,
-    // "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
     "noErrorTruncation": true,
@@ -39,6 +37,7 @@
     "vitest.setup.js",
     "jest.config.js",
     "jest.setup.js",
+    "rollup.config.js",
     "eslint.config.mjs",
     "**/*.d.ts"
   ]

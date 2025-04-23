@@ -1,13 +1,10 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { useTheme } from "@mui/material/styles";
 import { Button, Box } from "@mui/material";
-import ThemeProvider from "./ThemeProvider";
-import { useThemeContext } from "./ThemeContext";
+import ThemeProvider, { useTheme } from "./index";
 
 // Composant de test pour accéder au contexte du thème
 const TestComponent = () => {
-  const { mode, toggleTheme, setMode } = useThemeContext();
-  const theme = useTheme();
+  const { mode, theme, toggleTheme, setMode } = useTheme();
 
   return (
     <Box>
@@ -105,7 +102,7 @@ describe("ThemeProvider", () => {
     };
 
     const ButtonTest = () => {
-      const theme = useTheme();
+      const { theme } = useTheme();
       const borderRoot = theme.components?.MuiButton?.styleOverrides
         ?.root as unknown as { borderRadius: string };
 

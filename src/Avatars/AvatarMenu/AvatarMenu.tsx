@@ -7,7 +7,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { AvatarMenuProps, AvatarMenuOption } from "./AvatarMenu.d";
+import type { AvatarMenuProps, AvatarMenuOption } from "./AvatarMenu.types";
 
 /**
  * AvatarMenu component

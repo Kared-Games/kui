@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import AvatarMenu from "./AvatarMenu";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
+import AvatarMenu from "./index";
 
 describe("AvatarMenu", () => {
   const mockOptions = [

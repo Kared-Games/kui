@@ -1,10 +1,10 @@
 import { ReactElement } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import Header from "./Header";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
-import { AvatarMenuOption } from "@/Avatars/AvatarMenu/AvatarMenu.d";
+import type { AvatarMenuOption } from "@/Avatars/AvatarMenu/AvatarMenu.types";
+import Header from "./index";
 
 // Mock de useNavigate
 const mockNavigate = jest.fn();

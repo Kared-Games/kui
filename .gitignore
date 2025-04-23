@@ -21,5 +21,6 @@
 *.lock.icloud
 *.xml.icloud
 *.log
+*.tgz
 stats.html
 coverage

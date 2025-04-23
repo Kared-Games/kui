@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { AvatarMenuOption } from "@/Avatars/AvatarMenu/AvatarMenu.d";
+import type { ReactNode } from "react";
+import type { AvatarMenuOption } from "@/Avatars/AvatarMenu/AvatarMenu.types";
 
 /**
  * Navigation option

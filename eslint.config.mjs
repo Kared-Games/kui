@@ -10,7 +10,6 @@ import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 import prettierConfig from "eslint-config-prettier";
 import prettierPlugin from "eslint-plugin-prettier";
 import reactRefresh from "eslint-plugin-react-refresh";
-// import jestPlugin from "eslint-plugin-jest";
 import globals from "globals";
 
 // ----------------------------------------------------------------------
@@ -30,7 +29,7 @@ export default [
     ignores: ["node_modules", "dist", "build", ".storybook/storybook-static"],
   },
 
-  // Utilisez fixupConfigRules pour les configurations étendues
+  // Use fixupConfigRules for extended configurations
   ...fixupConfigRules(
     compat.extends(
       "eslint:recommended",
@@ -42,13 +41,14 @@ export default [
     )
   ),
 
+  // ----------------------------------------------------------------------
+
   {
     settings: {
       react: {
-        version: "detect", // Détecte automatiquement la version de React
+        version: "detect",
       },
     },
-
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -56,16 +56,14 @@ export default [
         ...globals.jest,
       },
     },
-
     rules: {
-      // Règle cruciale pour détecter les types non résolus
-      "no-undef": "error", // Cette règle standard d'ESLint détecte les variables non définies
+      "no-undef": "error",
     },
   },
 
-  // Configuration principale pour les fichiers TypeScript/React
+  // Main configuration for TypeScript/React files
   {
-    files: ["*.ts", "*.tsx"],
+    files: ["**/*.{ts,tsx}"],
     plugins: {
       react: reactPlugin,
       prettier: prettierPlugin,
@@ -104,14 +102,14 @@ export default [
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/no-explicit-any": "warn",
 
-      // Règles pour détecter les types non résolus
+      // Rules to detect unresolved types
       "@typescript-eslint/no-unsafe-member-access": "error",
       "@typescript-eslint/no-unsafe-assignment": "error",
       "@typescript-eslint/no-unsafe-call": "error",
       "@typescript-eslint/no-unsafe-return": "error",
       "@typescript-eslint/no-unsafe-argument": "error",
 
-      // Règle pour les importations de types
+      // Rule for type imports
       "@typescript-eslint/consistent-type-imports": [
         "error",
         {
@@ -132,9 +130,9 @@ export default [
     },
   },
 
-  // Configuration spécifique pour les fichiers de déclaration
+  // Specific configuration for declaration files
   {
-    files: ["*.d.ts"],
+    files: ["**/*.{types.ts,d.ts}"],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -142,18 +140,18 @@ export default [
       },
     },
     rules: {
-      // Règles spécifiques pour les fichiers de déclaration
+      // Specific rules for declaration files
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/ban-types": "error",
       "@typescript-eslint/no-namespace": "error",
       "@typescript-eslint/no-empty-interface": "error",
 
-      // Règle cruciale pour détecter les types non résolus
-      "no-undef": "error", // Cette règle standard d'ESLint détecte les variables non définies
+      // General rules
+      "no-undef": "error",
     },
   },
 
-  // Configuration principale pour les fichiers JavaScript/React
+  // Main configuration for JavaScript/React files
   {
     files: ["**/*.{js,jsx,mjs}"],
     languageOptions: {
@@ -168,14 +166,11 @@ export default [
       "react-refresh": reactRefresh,
       prettier: prettierPlugin,
     },
-    rules: {
-      "@typescript-eslint/ban-ts-comment": "off",
-    },
   },
 
-  // Configuration pour les fichiers commonjs
+  // Configuration for commonjs files
   {
-    files: ["*.js", "*.cjs"],
+    files: ["**/*.{js,cjs}"],
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -193,6 +188,8 @@ export default [
       "@typescript-eslint/no-require-imports": "off",
     },
   },
+
+  // ----------------------------------------------------------------------
 
   prettierConfig,
 ];

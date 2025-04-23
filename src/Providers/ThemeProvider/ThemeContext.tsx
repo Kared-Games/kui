@@ -1,14 +1,17 @@
-import { createContext, useContext } from "react";
-import { ThemeContextType, ThemeMode } from "./ThemeContext.d";
+import { createContext } from "react";
+import { createTheme } from "@mui/material/styles";
+import type { ThemeContextType, ThemeMode } from "./ThemeContext.types";
 
 /**
  * Theme context
  */
 export const initialState: ThemeContextType = {
   mode: "dark",
+  theme: createTheme(),
   toggleTheme: () => {},
   setMode: () => {},
 };
+
 export const ThemeContext = createContext<ThemeContextType>(initialState);
 
 /**
@@ -28,19 +31,3 @@ export const themeReducer = (state: ThemeContextType, action: ActionType) => {
       return state;
   }
 };
-
-/**
- * Use theme context
- * @returns Theme context
- */
-export function useThemeContext() {
-  const context = useContext(ThemeContext);
-
-  if (context === undefined) {
-    throw new Error(
-      "useThemeContext must be used within a ThemeContextProvider"
-    );
-  }
-
-  return context;
-}

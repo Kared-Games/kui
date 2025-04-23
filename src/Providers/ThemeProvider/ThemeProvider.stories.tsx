@@ -8,13 +8,12 @@ import {
   Switch,
   FormControlLabel,
 } from "@mui/material";
-import ThemeProvider from "./ThemeProvider";
-import { useThemeContext } from "./ThemeContext";
+import ThemeProvider, { useTheme } from "./index";
 
 // ----------------------------------------------------------------------
 
 const ThemeDemo = () => {
-  const { mode, toggleTheme } = useThemeContext();
+  const { mode, toggleTheme } = useTheme();
 
   return (
     <Box sx={{ p: 3, minHeight: "100vh" }}>
@@ -92,7 +91,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Story principale
+// ----------------------------------------------------------------------
+
 export const Default: Story = {
   args: {
     children: null,
@@ -106,7 +106,6 @@ export const Default: Story = {
   ),
 };
 
-// Story avec mode clair par défaut
 export const LightMode: Story = {
   args: {
     children: null,
@@ -120,7 +119,6 @@ export const LightMode: Story = {
   ),
 };
 
-// Story avec options de thème personnalisées
 export const CustomTheme: Story = {
   args: {
     children: null,
