@@ -51,19 +51,30 @@ const newsItems = [
 export const Default: Story = {
   args: {
     items: newsItems,
-    renderItem: (item) => (
-      <Card sx={{ maxWidth: 200 }}>
-        <CardMedia component="img" image={item.image} alt={item.title} />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {item.title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {item.description}
-          </Typography>
-        </CardContent>
-      </Card>
-    ),
+    renderItem: (item: unknown) => {
+      const typedItem = item as {
+        image: string;
+        title: string;
+        description: string;
+      };
+      return (
+        <Card sx={{ maxWidth: 200 }}>
+          <CardMedia
+            component="img"
+            image={typedItem.image}
+            alt={typedItem.title}
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {typedItem.title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {typedItem.description}
+            </Typography>
+          </CardContent>
+        </Card>
+      );
+    },
   },
 };
 
@@ -77,8 +88,15 @@ export const SingleItem: Story = {
 export const MultipleItems: Story = {
   args: {
     items: newsItems,
-    renderItem: (item) => (
-      <img src={item.image} alt={item.title} style={{ width: 200 }} />
-    ),
+    renderItem: (item: unknown) => {
+      const typedItem = item as { image: string; title: string };
+      return (
+        <img
+          src={typedItem.image}
+          alt={typedItem.title}
+          style={{ width: 200 }}
+        />
+      );
+    },
   },
 };
