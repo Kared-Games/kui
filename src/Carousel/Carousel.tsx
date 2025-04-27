@@ -1,15 +1,11 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade, Pagination } from "swiper/modules";
+import type { CarrouselProps } from "./Carousel.types";
 
 /**
- * Carrousel
+ * Carrousel using custom element
  */
-function Carrousel<T>(props: {
-  id?: string;
-  spaceBetween?: number;
-  items: Array<T>;
-  renderItem: (item: T) => React.ReactNode;
-}) {
+function Carrousel<T>(props: CarrouselProps<T>) {
   const { id, items, renderItem, spaceBetween = 0 } = props;
 
   if (!items.length) return null;
