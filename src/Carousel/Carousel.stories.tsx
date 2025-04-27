@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Carrousel from "./Carousel";
+import Carousel from "./Carousel";
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 
 const meta = {
   title: "Components/Carrousel",
-  component: Carrousel,
+  component: Carousel,
   parameters: {
     layout: "centered",
     docs: {
@@ -21,7 +21,7 @@ const meta = {
     ),
   ],
   tags: ["autodocs"],
-} satisfies Meta<typeof Carrousel>;
+} satisfies Meta<typeof Carousel>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

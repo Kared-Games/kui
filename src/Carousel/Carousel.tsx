@@ -1,11 +1,12 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade, Pagination } from "swiper/modules";
-import type { CarrouselProps } from "./Carousel.types";
-
+import type { CarouselProps } from "./Carousel.types";
+import { useTheme } from "../Providers/ThemeProvider";
 /**
- * Carrousel using custom element
+ * Carousel using custom element
  */
-function Carrousel<T>(props: CarrouselProps<T>) {
+function Carousel<T>(props: CarouselProps<T>) {
+  const { theme } = useTheme();
   const { id, items, renderItem, spaceBetween = 0 } = props;
 
   if (!items.length) return null;
@@ -23,6 +24,18 @@ function Carrousel<T>(props: CarrouselProps<T>) {
   return (
     <Swiper
       id={id}
+      style={{
+        // @ts-ignore
+        "--swiper-pagination-bullet-active": theme.palette.primary.main,
+        "--swiper-pagination-bullet-inactive-color":
+          theme.palette.text.secondary,
+        "--swiper-pagination-bullet-inactive-opacity": "0.6",
+        "--swiper-pagination-bullet-opacity": "1",
+        "--swiper-pagination-bullet-size": "0.55rem",
+        "--swiper-pagination-bullet-horizontal-gap": "0.25rem",
+        "--swiper-navigation-color": theme.palette.primary.main,
+        "--swiper-theme-color": theme.palette.primary.main,
+      }}
       className="swiper-kui"
       slidesPerView={1}
       spaceBetween={spaceBetween}
@@ -44,4 +57,4 @@ function Carrousel<T>(props: CarrouselProps<T>) {
 
 // ----------------------------------------------------------------------
 
-export default Carrousel;
+export default Carousel;

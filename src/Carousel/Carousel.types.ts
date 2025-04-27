@@ -1,6 +1,6 @@
 import React from "react";
 
-export interface CarrouselProps<T> {
+export interface CarouselProps<T> {
   /**
    * ID optionnel pour le carrousel
    */
