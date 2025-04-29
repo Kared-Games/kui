@@ -71,7 +71,7 @@ jobs:
           fi
 
       - name: 📄 Deploy coverage report to GitHub Pages
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: coverage/lcov-report
@@ -79,11 +79,11 @@ jobs:
           branch: gh-pages
 
       - name: 🏗️ Build package
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         run: npm run build
 
       - name: 🏷️ Create and push tag
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -91,7 +91,7 @@ jobs:
           git push origin ${{ steps.check_version.outputs.TAG_NAME }}
 
       - name: 🔧 Setup Node.js for GitHub Packages
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -99,7 +99,7 @@ jobs:
           scope: "@kared"
 
       - name: 📤 Publish to GitHub Packages
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         run: |
           echo "@kared:registry=https://npm.pkg.github.com" > .npmrc
           echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
@@ -108,7 +108,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🔧 Setup Node.js for NPM
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -116,7 +116,7 @@ jobs:
           scope: "@kared"
 
       - name: 📤 Publish to NPM
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         run: |
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           npm publish --access public
@@ -124,7 +124,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
       - name: 📝 Create GitHub Release
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.check_version.outputs.TAG_NAME }}
@@ -138,7 +138,7 @@ jobs:
   # Appel au workflow de déploiement Storybook
   deploy-storybook:
     needs: build-and-publish
-    if: needs.build-and-publish.outputs.VERSION_CHANGED == 'true'
+    # if: needs.build-and-publish.outputs.VERSION_CHANGED == 'true'
     uses: ./.github/workflows/deploy-storybook.yml
     with:
       version_changed: ${{ needs.build-and-publish.outputs.VERSION_CHANGED }}
