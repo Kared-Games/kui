@@ -1,6 +1,9 @@
 name: 🚀 Build and Publish
 
 on:
+  # Déclenchement manuel depuis l'interface GitHub
+  workflow_dispatch:
+
   push:
     branches:
       - main
