@@ -1,0 +1,49 @@
+name: 📚 Deploy Storybook
+
+on:
+  # Déclenchement manuel depuis l'interface GitHub
+  workflow_dispatch:
+
+  # Déclenchement par un autre workflow
+  workflow_call:
+    inputs:
+      version_changed:
+        description: "Indique si la version a changé"
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  deploy-storybook:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 📚 Build Storybook
+        run: npm run build:storybook
+
+      - name: 🌐 Deploy Storybook to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: storybook-static
+          target-folder: storybook
+          branch: gh-pages
+          clean: true
+          clean-exclude: |
+            coverage/**
