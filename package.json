@@ -95,7 +95,7 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
-    "@kared:registry": "https://npm.pkg.github.com"
+    "@kared:kui": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",

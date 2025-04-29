@@ -16,6 +16,7 @@ on:
 jobs:
   deploy-storybook:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
       pages: write
