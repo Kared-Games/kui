@@ -39,19 +39,13 @@ jobs:
         run: npm run test:coverage
 
       - name: 🛂 Ensure badges directory exists
-        run: mkdir -p .github/badges
+        run: mkdir -p badges
 
       - name: 🎨 Create Coverage Badge
         uses: jaywcjlove/coverage-badges-cli@main
         with:
           source: coverage/coverage-summary.json
-          output: .github/badges/coverage.svg
-
-      - name: 🏷️ Commit and push badge
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: ".github/badges/coverage.svg"
-          message: "📝 Update coverage badge"
+          output: badges/coverage.svg
 
       - name: 🔍 Check if version changed
         id: check_version
@@ -71,12 +65,23 @@ jobs:
           fi
 
       - name: 📄 Deploy coverage report to GitHub Pages
-        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: coverage/lcov-report
           target-folder: coverage
           branch: gh-pages
+          clean: true
+          clean-exclude: |
+            storybook/**
+            badges/**
+
+      - name: 🏷️ Deploy badge to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: badges
+          target-folder: badges
+          branch: gh-pages
+          clean: false
 
       - name: 🏗️ Build package
         # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
