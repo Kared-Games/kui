@@ -101,14 +101,15 @@ jobs:
         with:
           node-version: "20"
           registry-url: "https://npm.pkg.github.com"
-          scope: "@kared"
+          scope: "@kared-games"
 
       - name: 📤 Publish to GitHub Packages
         # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         run: |
-          echo "@kared:registry=https://npm.pkg.github.com" > .npmrc
+          echo "@kared-games:registry=https://npm.pkg.github.com/" > .npmrc
           echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-          npm publish
+          cat .npmrc
+          npm publish --registry=https://npm.pkg.github.com/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -123,10 +124,20 @@ jobs:
       - name: 📤 Publish to NPM
         # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          # Sauvegarde du package.json original
+          cp package.json package.json.bak
+
+          # Modification du nom pour npm
+          jq '.name = "@kared/kui"' package.json > temp.json && mv temp.json package.json
+
+          # Publication sur npm
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
           npm publish --access public
+
+          # Restauration du package.json original
+          mv package.json.bak package.json
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
       - name: 📝 Create GitHub Release
         # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
