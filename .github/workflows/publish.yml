@@ -150,7 +150,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.check_version.outputs.TAG_NAME }}
-          name: Release ${{ steps.check_version.outputs.TAG_NAME }}
+          name: ${{ steps.check_version.outputs.TAG_NAME }}
           draft: false
           prerelease: false
           generate_release_notes: true
@@ -163,5 +163,5 @@ jobs:
     # if: needs.build-and-publish.outputs.VERSION_CHANGED == 'true'
     uses: ./.github/workflows/deploy-storybook.yml
     with:
-      version_changed: ${{ needs.build-and-publish.outputs.VERSION_CHANGED }}
+      version_changed: "${{ needs.build-and-publish.outputs.VERSION_CHANGED }}"
     secrets: inherit
