@@ -73,12 +73,14 @@ jobs:
       # 3. Préparation et déploiement de la page d'accueil
       - name: 📄 Convert README to HTML
         run: |
-          # Créer un dossier temporaire pour le déploiement
           mkdir -p deploy_root
-          # Copier le README.md
           cp README.md deploy_root/
-          # Convertir le README en HTML
-          pandoc README.md -o deploy_root/index.html
+
+          # Installation et utilisation de marked
+          npm install -g marked
+          echo "<!DOCTYPE html><html><head><meta charset='utf-8'><title>KUI Documentation</title><style>body{max-width:800px;margin:40px auto;padding:0 20px;font-family:system-ui,-apple-system,sans-serif}</style></head><body>" > deploy_root/index.html
+          marked -i README.md >> deploy_root/index.html
+          echo "</body></html>" >> deploy_root/index.html
 
       - name: 📤 Deploy README to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
