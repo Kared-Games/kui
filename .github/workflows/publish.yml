@@ -179,7 +179,7 @@ jobs:
 
           # Publication sur npm
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-          npm publish --access public
+          npm publish dist/ --access public
 
           # Restauration du package.json original
           mv package.json.bak package.json
