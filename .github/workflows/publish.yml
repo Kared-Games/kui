@@ -101,6 +101,8 @@ jobs:
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
           TAG_NAME="v$PACKAGE_VERSION"
+          echo "VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_OUTPUT
 
           # Configuration de l'authentification pour npm view
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
@@ -133,8 +135,6 @@ jobs:
             echo "VERSION_CHANGED=false" >> $GITHUB_OUTPUT
           else
             echo "New version $PACKAGE_VERSION detected"
-            echo "VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
-            echo "TAG_NAME=$TAG_NAME" >> $GITHUB_OUTPUT
             echo "VERSION_CHANGED=true" >> $GITHUB_OUTPUT
           fi
         env:
@@ -201,19 +201,18 @@ jobs:
       - name: 📤 Publish to NPM
         if: steps.check_version.outputs.PUBLISHED_NPM == 'false'
         run: |
-          # Sauvegarde du package.json original
-          cp package.json package.json.bak
+          # Sauvegarde du package.json de dist
+          cp dist/package.json dist/package.json.bak
 
-          # Modification du nom pour npm
-          jq '.name = "@kared/kui"' package.json > temp.json && mv temp.json package.json
+          # Modification du nom pour npm dans dist/package.json
+          jq '.name = "@kared/kui"' dist/package.json > dist/temp.json && mv dist/temp.json dist/package.json
 
           # Publication sur npm
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-          cat .npmrc
           npm publish dist/ --access public
 
           # Restauration du package.json original
-          mv package.json.bak package.json
+          mv dist/package.json.bak dist/package.json
         env:
           NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
