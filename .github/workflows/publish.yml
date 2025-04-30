@@ -20,7 +20,11 @@ jobs:
       pages: write
 
     outputs:
+      PUBLISHED_NPM: ${{ steps.check_version.outputs.PUBLISHED_NPM }}
+      PUBLISHED_GITHUB: ${{ steps.check_version.outputs.PUBLISHED_GITHUB }}
       VERSION_CHANGED: ${{ steps.check_version.outputs.VERSION_CHANGED }}
+      VERSION: ${{ steps.check_version.outputs.VERSION }}
+      TAG_NAME: ${{ steps.check_version.outputs.TAG_NAME }}
 
     steps:
       # 1. Installation
@@ -34,6 +38,7 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
+          cache-dependency-path: package-lock.json
 
       - name: 📦 Install dependencies
         run: npm ci
@@ -90,19 +95,37 @@ jobs:
           target-folder: .
           clean: false
 
-      # 4. Vérification de la version et création du tag
-      - name: 🔍 Check if version changed
+      # 4. Vérification du statut de la version sur NPM et GitHub
+      - name: 🔍 Check versions status
         id: check_version
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
           TAG_NAME="v$PACKAGE_VERSION"
 
-          # Vérifier si le tag existe déjà
+          # Vérifie si la version existe sur npm
+          if npm view "@kared/kui@$PACKAGE_VERSION" --registry=https://registry.npmjs.org/ &>/dev/null; then
+            echo "PUBLISHED_NPM=true" >> $GITHUB_OUTPUT
+            echo "Version $PACKAGE_VERSION exists on NPM"
+          else
+            echo "PUBLISHED_NPM=false" >> $GITHUB_OUTPUT
+            echo "Version $PACKAGE_VERSION not found on NPM"
+          fi
+
+          # Vérifie si la version existe sur GitHub Packages
+          if npm view "@kared-games/kui@$PACKAGE_VERSION" --registry=https://npm.pkg.github.com/ &>/dev/null; then
+            echo "PUBLISHED_GITHUB=true" >> $GITHUB_OUTPUT
+            echo "Version $PACKAGE_VERSION exists on GitHub Packages"
+          else
+            echo "PUBLISHED_GITHUB=false" >> $GITHUB_OUTPUT
+            echo "Version $PACKAGE_VERSION not found on GitHub Packages"
+          fi
+
+          # Vérifie si le tag existe
           if git ls-remote --tags origin refs/tags/$TAG_NAME | grep -q $TAG_NAME; then
-            echo "Version $PACKAGE_VERSION already published. Skipping."
+            echo "Version $PACKAGE_VERSION tag exists"
             echo "VERSION_CHANGED=false" >> $GITHUB_OUTPUT
           else
-            echo "New version $PACKAGE_VERSION detected."
+            echo "New version $PACKAGE_VERSION detected"
             echo "VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
             echo "TAG_NAME=$TAG_NAME" >> $GITHUB_OUTPUT
             echo "VERSION_CHANGED=true" >> $GITHUB_OUTPUT
@@ -110,7 +133,10 @@ jobs:
 
       # 5. Build et publication du package
       - name: 🏗️ Build package
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        if: |
+          steps.check_version.outputs.VERSION_CHANGED == 'true' ||
+          steps.check_version.outputs.PUBLISHED_NPM == 'false' ||
+          steps.check_version.outputs.PUBLISHED_GITHUB == 'false'
         run: npm run build
 
       - name: 🏷️ Create and push tag
@@ -118,15 +144,9 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-
-          # Vérifier si le tag existe déjà
-          if ! git ls-remote --tags origin refs/tags/${{ steps.check_version.outputs.TAG_NAME }} | grep -q ${{ steps.check_version.outputs.TAG_NAME }}; then
-            git tag ${{ steps.check_version.outputs.TAG_NAME }}
-            git push origin ${{ steps.check_version.outputs.TAG_NAME }}
-            echo "Tag ${{ steps.check_version.outputs.TAG_NAME }} created and pushed."
-          else
-            echo "Tag ${{ steps.check_version.outputs.TAG_NAME }} already exists. Skipping."
-          fi
+          git tag ${{ steps.check_version.outputs.TAG_NAME }}
+          git push origin ${{ steps.check_version.outputs.TAG_NAME }}
+          echo "Tag ${{ steps.check_version.outputs.TAG_NAME }} created and pushed."
 
       # 6. Création de la release GitHub
       - name: 📝 Create GitHub Release
@@ -142,7 +162,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🔧 Setup Node.js for GitHub Packages
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        if: steps.check_version.outputs.PUBLISHED_GITHUB == 'false'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -150,18 +170,17 @@ jobs:
           scope: "@kared-games"
 
       - name: 📤 Publish to GitHub Packages
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        if: steps.check_version.outputs.PUBLISHED_GITHUB == 'false'
         run: |
           echo "@kared-games:registry=https://npm.pkg.github.com/" > .npmrc
           echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-          cat .npmrc
           npm publish --registry=https://npm.pkg.github.com/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 7. Création de la release NPM
       - name: 🔧 Setup Node.js for NPM
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        if: steps.check_version.outputs.PUBLISHED_NPM == 'false'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -169,7 +188,7 @@ jobs:
           scope: "@kared"
 
       - name: 📤 Publish to NPM
-        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        if: steps.check_version.outputs.PUBLISHED_NPM == 'false'
         run: |
           # Sauvegarde du package.json original
           cp package.json package.json.bak
