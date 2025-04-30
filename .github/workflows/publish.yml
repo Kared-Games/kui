@@ -112,7 +112,8 @@ jobs:
           fi
 
           # Vérifie si la version existe sur GitHub Packages
-          if npm view "@kared-games/kui@$PACKAGE_VERSION" --registry=https://npm.pkg.github.com/ &>/dev/null; then
+          GITHUB_CHECK=$(npm view "@kared-games/kui@$PACKAGE_VERSION" --registry=https://npm.pkg.github.com/ version 2>/dev/null || echo "not_found")
+          if [ "$GITHUB_CHECK" = "$PACKAGE_VERSION" ]; then
             echo "PUBLISHED_GITHUB=true" >> $GITHUB_OUTPUT
             echo "Version $PACKAGE_VERSION exists on GitHub Packages"
           else
@@ -174,6 +175,7 @@ jobs:
         run: |
           echo "@kared-games:registry=https://npm.pkg.github.com/" > .npmrc
           echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+          cat .npmrc
           npm publish --registry=https://npm.pkg.github.com/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -198,12 +200,21 @@ jobs:
 
           # Publication sur npm
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+          cat .npmrc
           npm publish dist/ --access public
 
           # Restauration du package.json original
           mv package.json.bak package.json
         env:
           NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+
+      - name: 📝 Outputs
+        run: |
+          echo "VERSION: ${{ steps.check_version.outputs.VERSION }}"
+          echo "TAG_NAME: ${{ steps.check_version.outputs.TAG_NAME }}"
+          echo "VERSION_CHANGED: ${{ steps.check_version.outputs.VERSION_CHANGED }}"
+          echo "PUBLISHED_NPM: ${{ steps.check_version.outputs.PUBLISHED_NPM }}"
+          echo "PUBLISHED_GITHUB: ${{ steps.check_version.outputs.PUBLISHED_GITHUB }}"
 
   # Appel au workflow de déploiement Storybook
   deploy-storybook:
