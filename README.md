@@ -1,8 +1,8 @@
 # @kared/kui
 
-[![Tests](https://github.com/Kared-Games/kui/actions/workflows/publish.yml/badge.svg)](https://github.com/Kared-Games/kui/actions/workflows/publish.yml)
-![Coverage](https://kared-games.github.io/kui/badges/coverage.svg)
-[![npm version](https://img.shields.io/npm/v/@kared/kui)](https://www.npmjs.com/package/@kared/kui)
+[![Workflows](https://github.com/Kared-Games/kui/actions/workflows/publish.yml/badge.svg)](https://github.com/Kared-Games/kui/actions/workflows/publish.yml)
+[![Coverage](https://raw.githubusercontent.com/Kared-Games/kui/gh-pages/badges/coverage.svg)](https://kared-games.github.io/kui/coverage)
+[![NPM version](https://img.shields.io/npm/v/@kared/kui)](https://www.npmjs.com/package/@kared/kui)
 
 Un design system moderne et flexible pour React, conçu spécifiquement pour les applications de Kared Dev.
 
