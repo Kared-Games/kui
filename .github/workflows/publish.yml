@@ -4,11 +4,13 @@ on:
   # Déclenchement manuel depuis l'interface GitHub
   workflow_dispatch:
 
+  # Déclenchement par un push sur la branche main
   push:
     branches:
       - main
 
 jobs:
+  # Création du build et publication du package
   build-and-publish:
     runs-on: ubuntu-latest
 
@@ -21,6 +23,7 @@ jobs:
       VERSION_CHANGED: ${{ steps.check_version.outputs.VERSION_CHANGED }}
 
     steps:
+      # 1. Installation
       - name: 📥 Checkout code
         uses: actions/checkout@v4
         with:
@@ -35,6 +38,7 @@ jobs:
       - name: 📦 Install dependencies
         run: npm ci
 
+      # 2. Tests et déploiement du rapport de couverture
       - name: 📊 Generate test coverage
         run: npm run test:coverage
 
@@ -47,6 +51,44 @@ jobs:
           source: coverage/coverage-summary.json
           output: badges/coverage.svg
 
+      - name: 🏷️ Deploy badge to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: badges
+          target-folder: badges
+          branch: gh-pages
+          clean: false
+
+      - name: 📄 Deploy coverage report to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: coverage/lcov-report
+          target-folder: coverage
+          branch: gh-pages
+          clean: true
+          clean-exclude: |
+            storybook/**
+            badges/**
+
+      # 3. Préparation et déploiement de la page d'accueil
+      - name: 📄 Convert README to HTML
+        run: |
+          # Créer un dossier temporaire pour le déploiement
+          mkdir -p deploy_root
+          # Copier le README.md
+          cp README.md deploy_root/
+          # Convertir le README en HTML
+          pandoc README.md -o deploy_root/index.html
+
+      - name: 📤 Deploy README to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: deploy_root
+          target-folder: .
+          clean: false
+
+      # 4. Vérification de la version et création du tag
       - name: 🔍 Check if version changed
         id: check_version
         run: |
@@ -64,31 +106,13 @@ jobs:
             echo "VERSION_CHANGED=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: 📄 Deploy coverage report to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: coverage/lcov-report
-          target-folder: coverage
-          branch: gh-pages
-          clean: true
-          clean-exclude: |
-            storybook/**
-            badges/**
-
-      - name: 🏷️ Deploy badge to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: badges
-          target-folder: badges
-          branch: gh-pages
-          clean: false
-
+      # 5. Build et publication du package
       - name: 🏗️ Build package
-        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         run: npm run build
 
       - name: 🏷️ Create and push tag
-        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -97,12 +121,26 @@ jobs:
           if ! git ls-remote --tags origin refs/tags/${{ steps.check_version.outputs.TAG_NAME }} | grep -q ${{ steps.check_version.outputs.TAG_NAME }}; then
             git tag ${{ steps.check_version.outputs.TAG_NAME }}
             git push origin ${{ steps.check_version.outputs.TAG_NAME }}
+            echo "Tag ${{ steps.check_version.outputs.TAG_NAME }} created and pushed."
           else
             echo "Tag ${{ steps.check_version.outputs.TAG_NAME }} already exists. Skipping."
           fi
 
+      # 6. Création de la release GitHub
+      - name: 📝 Create GitHub Release
+        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.check_version.outputs.TAG_NAME }}
+          name: ${{ steps.check_version.outputs.TAG_NAME }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: 🔧 Setup Node.js for GitHub Packages
-        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -110,7 +148,7 @@ jobs:
           scope: "@kared-games"
 
       - name: 📤 Publish to GitHub Packages
-        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         run: |
           echo "@kared-games:registry=https://npm.pkg.github.com/" > .npmrc
           echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
@@ -119,8 +157,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # 7. Création de la release NPM
       - name: 🔧 Setup Node.js for NPM
-        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -128,7 +167,7 @@ jobs:
           scope: "@kared"
 
       - name: 📤 Publish to NPM
-        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
+        if: steps.check_version.outputs.VERSION_CHANGED == 'true'
         run: |
           # Sauvegarde du package.json original
           cp package.json package.json.bak
@@ -145,23 +184,11 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
-      - name: 📝 Create GitHub Release
-        # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.check_version.outputs.TAG_NAME }}
-          name: ${{ steps.check_version.outputs.TAG_NAME }}
-          draft: false
-          prerelease: false
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   # Appel au workflow de déploiement Storybook
   deploy-storybook:
     needs: build-and-publish
-    # if: needs.build-and-publish.outputs.VERSION_CHANGED == 'true'
+    if: needs.build-and-publish.outputs.VERSION_CHANGED == 'true'
     uses: ./.github/workflows/deploy-storybook.yml
     with:
-      version_changed: "${{ needs.build-and-publish.outputs.VERSION_CHANGED }}"
+      version_changed: ${{ needs.build-and-publish.outputs.VERSION_CHANGED }}
     secrets: inherit

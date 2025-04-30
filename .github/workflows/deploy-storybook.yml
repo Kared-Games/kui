@@ -10,8 +10,8 @@ on:
       version_changed:
         description: "Indique si la version a changé"
         required: false
-        type: boolean
-        default: true
+        type: string
+        default: "false"
 
 jobs:
   deploy-storybook:
@@ -22,6 +22,7 @@ jobs:
       pages: write
 
     steps:
+      # 1. Installation
       - name: 📥 Checkout code
         uses: actions/checkout@v4
         with:
@@ -36,9 +37,11 @@ jobs:
       - name: 📦 Install dependencies
         run: npm ci
 
+      # 2. Build
       - name: 📚 Build Storybook
         run: npm run build:storybook
 
+      # 3. Déploiement
       - name: 🌐 Deploy Storybook to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
