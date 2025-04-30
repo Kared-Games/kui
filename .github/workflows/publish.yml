@@ -102,6 +102,9 @@ jobs:
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
           TAG_NAME="v$PACKAGE_VERSION"
 
+          # Configuration de l'authentification pour npm view
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+
           # Vérifie si la version existe sur npm
           if npm view "@kared/kui@$PACKAGE_VERSION" --registry=https://registry.npmjs.org/ &>/dev/null; then
             echo "PUBLISHED_NPM=true" >> $GITHUB_OUTPUT
@@ -111,9 +114,12 @@ jobs:
             echo "Version $PACKAGE_VERSION not found on NPM"
           fi
 
+          # Configuration de l'authentification pour npm view
+          echo "@kared-games:registry=https://npm.pkg.github.com/" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+
           # Vérifie si la version existe sur GitHub Packages
-          GITHUB_CHECK=$(npm view "@kared-games/kui@$PACKAGE_VERSION" --registry=https://npm.pkg.github.com/ version 2>/dev/null || echo "not_found")
-          if [ "$GITHUB_CHECK" = "$PACKAGE_VERSION" ]; then
+          if npm view "@kared-games/kui@$PACKAGE_VERSION" --registry=https://npm.pkg.github.com/ &>/dev/null; then
             echo "PUBLISHED_GITHUB=true" >> $GITHUB_OUTPUT
             echo "Version $PACKAGE_VERSION exists on GitHub Packages"
           else
@@ -131,6 +137,9 @@ jobs:
             echo "TAG_NAME=$TAG_NAME" >> $GITHUB_OUTPUT
             echo "VERSION_CHANGED=true" >> $GITHUB_OUTPUT
           fi
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 5. Build et publication du package
       - name: 🏗️ Build package
@@ -209,6 +218,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
       - name: 📝 Outputs
+        if: always()
         run: |
           echo "VERSION: ${{ steps.check_version.outputs.VERSION }}"
           echo "TAG_NAME: ${{ steps.check_version.outputs.TAG_NAME }}"
