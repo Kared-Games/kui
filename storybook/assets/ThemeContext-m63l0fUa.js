@@ -1,0 +1,1 @@
+import{r}from"./index-MPVjHJeJ.js";import{c as o}from"./DefaultPropsProvider-CxE5aRM8.js";const a={mode:"dark",theme:o(),toggleTheme:()=>{},setMode:()=>{}},c=r.createContext(a),d=(e,t)=>{switch(t.type){case"SET_MODE":return{...e,mode:t.payload};default:return e}};export{c as T,a as i,d as t};
