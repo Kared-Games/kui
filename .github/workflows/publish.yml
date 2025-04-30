@@ -92,8 +92,14 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git tag ${{ steps.check_version.outputs.TAG_NAME }}
-          git push origin ${{ steps.check_version.outputs.TAG_NAME }}
+
+          # Vérifier si le tag existe déjà
+          if ! git ls-remote --tags origin refs/tags/${{ steps.check_version.outputs.TAG_NAME }} | grep -q ${{ steps.check_version.outputs.TAG_NAME }}; then
+            git tag ${{ steps.check_version.outputs.TAG_NAME }}
+            git push origin ${{ steps.check_version.outputs.TAG_NAME }}
+          else
+            echo "Tag ${{ steps.check_version.outputs.TAG_NAME }} already exists. Skipping."
+          fi
 
       - name: 🔧 Setup Node.js for GitHub Packages
         # if: steps.check_version.outputs.VERSION_CHANGED == 'true'
